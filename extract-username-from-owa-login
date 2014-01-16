@@ -1,0 +1,22 @@
+when HTTP_REQUEST {
+   if { [HTTP::method] equals "POST" } {
+         if {[HTTP::header exists "Content-Length"] && [HTTP::header "Content-Length"] <= 1048576} {
+         set content_length [HTTP::header "Content-Length"]
+      } else {
+         set content_length 1048576
+      }
+      HTTP::collect $content_length
+   }
+}
+when HTTP_REQUEST_DATA {
+if  { (([HTTP::payload] contains "username") and ([HTTP::uri] contains "/owa/auth.owa"))} {
+    set username "unknown"
+    foreach x [split [string tolower [HTTP::payload]] "&"] {
+        if { $x starts_with "username=" } {
+            set username [lindex [split $x "="] 1]
+        }
+    }
+    log local0. "User $username attempted login from [IP::client_addr]:[TCP::client_port]"
+
+   }
+}

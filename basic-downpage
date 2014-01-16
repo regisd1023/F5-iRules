@@ -1,0 +1,25 @@
+###
+###  Generates a skeleton 'down' page that includes the host and uri the user was trying to get.  
+###  Uncomment the lines below to have it only do this if there are no active pool members
+###
+
+when HTTP_REQUEST {
+#  set VSPool [LB::server pool]
+#  if { [active_members $VSPool] < 1 } {
+#    log local0. "Client [IP::client_addr] requested [HTTP::uri] no active nodes available..."
+        HTTP::respond 200 content "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+<html xml:lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\"><head>
+
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <title>We'll be back!</title>
+</head><body>
+    <div id=\"MainContent\">
+        <p><strong>Hi there! Thanks for stopping by, but [HTTP::host][HTTP::uri] isn't available.</strong></p>
+        <p>We're making some changes on the site and expect to be back in a couple of hours.</p>
+
+        <p>See you there!</p>
+    </div>
+</body></html>"
+      
+#    }
+}

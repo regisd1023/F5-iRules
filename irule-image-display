@@ -1,0 +1,9 @@
+###
+###  displays a picture.
+###
+
+when HTTP_REQUEST {
+
+HTTP::respond 200 content [b64decode [class element -value 0 logo-1-2014]] "Content-Type" "image/jpg"
+
+}

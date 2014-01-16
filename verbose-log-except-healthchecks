@@ -1,0 +1,14 @@
+# needs a data class "LTM-and-GTM-IPs" which contains IPs for hosts that will 
+# be doing healthchecks, because we don't want to log those
+when SERVER_CONNECTED {
+     # This logs information about the TCP connections on *both* sides of the full proxy
+	if { [ class exists LTM-and-GTM-IPs ] }
+	{
+		if { not [ class match [IP::client_addr] equals LTM-and-GTM-IPs ] }
+		 {
+                    log 10.1.1.1 local0.info "Got connection: Client([IP::client_addr]:[TCP::client_port])<->([IP::local_addr clientside]:[TCP::local_port clientside])LTM([IP::local_addr]:[TCP::local_port])<->([IP::server_addr]:[TCP::server_port])Server"
+		}
+	} else {
+                    log 10.1.1.1 local0.info "Got connection: Client([IP::client_addr]:[TCP::client_port])<->([IP::local_addr clientside]:[TCP::local_port clientside])LTM([IP::local_addr]:[TCP::local_port])<->([IP::server_addr]:[TCP::server_port])Server"
+	}
+}

@@ -1,0 +1,9 @@
+# assumes that we're dealing with /23 networks
+#
+# if the client and server are both on the same subnet, then automap so we won't be 
+# running into asymmetric routing issues
+when LB_SELECTED { 
+	   if {[IP::addr "[IP::client_addr]/23" equals "[LB::server addr]/23"]} { 
+	      snat automap
+	   }
+	}

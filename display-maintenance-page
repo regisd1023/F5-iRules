@@ -1,0 +1,51 @@
+rule display-maint-page {
+   when HTTP_REQUEST {
+
+   # Taken from https://devcentral.f5.com/wiki/irules.ltmmaintenancepage.ashx
+   # Service requests for files (URIs) from the maintenance page.
+   # Note that we always service these pages, even if the http_pool is up.
+   # Therefore, the maintenance prefix should be unique in the application and
+   # not conflict with an existing directory on the web servers.
+
+   set maint_prefix "/maintenancepage"
+
+   if { [HTTP::uri] starts_with "$maint_prefix" } {
+
+      # Strip off the $maint_prefix from the URI as you can't easily do variable expansion
+      # within a switch statement.
+      # Note that requests for the exact maintenance prefix URI will be set to a null string,
+      # so handle null in the first switch case.
+      set uri [string map [list $maint_prefix ""] [HTTP::uri]]
+
+      # Return the requested page based on the requested URI  
+      # we need a switch statement for any uri you want to serve.
+      #
+      switch -- $uri {
+         "" {
+            log local0. "Request for $maint_prefix. Redirecting to $maint_prefix/index.html"
+            HTTP::redirect "$maint_prefix/index.html"
+         }
+         "/" - 
+         "/index.html" {
+            log local0. "Request for index. Responding with content: [lindex $::maint_index_html_class 0]"
+            HTTP::respond 200 content [class element -value 0 maint_index_html_class] "Content-Type" "text/html"
+         }
+         "/logo.png" {
+            log local0. "Request for logo.png. Responding with binary content"
+            HTTP::respond 200 content [b64decode [class element -value 0 network-logo]] "Content-Type" "image/png"
+         }
+         default {
+            log local0. "Unrecognized request to URI: [HTTP::uri]"
+            HTTP::respond 404 content "Unrecognized request to [HTTP::uri]" "Content-Type" "text/html"
+         }
+      }
+      return
+   }
+   #
+   # If the all members in the default pool are down, redirect to the maintenance page
+   #
+   if { [active_members [LB::server pool]] < 1 } {
+      HTTP::redirect "$maint_prefix/index.html"
+   }
+}
+}

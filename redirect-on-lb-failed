@@ -1,0 +1,4 @@
+when LB_FAILED {
+# HTTP::redirect uses a 302 redirect, not a 301 permanent redirect
+HTTP::redirect http://www.icanhascheezburger.com/ 
+}
