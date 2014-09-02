@@ -1,7 +1,8 @@
 when CLIENT_ACCEPTED {
      # This drops anything that's not coming from My IP range (a
-     # defined data group containing the prefixes I want to allow.)
-     # If the class doesn't exist or has been deleted, it fails "closed", meaning
+     # defined data group named "My-Network-IPs" containing the prefixes that
+     # I want to allow.)
+     # If the class doesn't exist or has been deleted, the rule fails "closed", meaning
      # it will drop connections if something goes wrong with the rule.
 
 	if { [ class exists My-Network-IPs ] }
