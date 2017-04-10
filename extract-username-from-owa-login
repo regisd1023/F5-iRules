@@ -19,4 +19,4 @@ if  { (([HTTP::payload] contains "username") and ([HTTP::uri] contains "/owa/aut
     log local0. "User $username attempted login from [IP::client_addr]:[TCP::client_port]"
 
    }
-}
+} 
