@@ -130,7 +130,7 @@ def is_ipV4(addrstring):
   """ checks that a dotted decomial IP address string can be correctly
       parsed by the OS's inet_pton - quick way to verify formatting
 
-      takes addrstring which is "130.64.1.1" or something like it.
+      takes addrstring which is "10.64.1.1" or something like it.
   """
   try:
     socket.inet_aton(addrstring)
@@ -220,7 +220,7 @@ def get_virts():
   #             "autoLasthop": "default",
   #             "cmpEnabled": "yes",
   #             "connectionLimit": 0,
-  #             "destination": "/PARTITION1/130.64.112.244:8443",
+  #             "destination": "/PARTITION1/10.64.112.244:8443",
   #             "enabled": true,
   #             "gtmScore": 0,
   #             "ipProtocol": "tcp",
